@@ -29,9 +29,8 @@ function MyStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: "orange", height: 100 },
-        headerTitleAlign: "center",
-        headerTintColor: "#444",
+        headerStyle: { backgroundColor: "grey" },
+        headerTintColor: "#EEE",
       }}
       initialRouteName="SettingsList"
     >
@@ -40,6 +39,7 @@ function MyStack() {
         component={SettingsScreen}
         options={{
           title: "Settings List",
+          headerShown: false,
         }}
       />
       <Stack.Screen name="About" component={AboutScreen} />
