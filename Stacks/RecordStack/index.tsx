@@ -1,6 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import RecordsScreen from "../../screens/RecordsScreen";
-import RecordDetails from "../../screens/RecordDetails";
 
 type RecordStackParamList = {
   Records: undefined;
@@ -16,7 +15,6 @@ const RecordStack = () => (
       component={RecordsScreen}
       options={{ headerShown: false }}
     />
-    <Stack.Screen name="RecordDetails" component={RecordDetails} />
   </Stack.Navigator>
 );
 
