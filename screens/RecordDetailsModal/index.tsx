@@ -13,6 +13,7 @@ const RecordDetailsModal = ({
   onModalClose,
   activeTransaction,
 }: RecordDetailsModalProps) => {
+  if (!activeTransaction) return null;
   const {
     amount,
     currency,
@@ -42,8 +43,13 @@ const RecordDetailsModal = ({
         <Text>Comment: {comment}</Text>
         <Text>Place: {place}</Text>
         <Text>
-          {recordType} : {amount}
-          {currency}
+          <Text style={styles.recordType}>{recordType}</Text> :{" "}
+          <Text style={{ color: recordType === "income" ? "green" : "red" }}>
+            {" "}
+            {recordType !== "income" && "-"}
+            {amount}
+            {currency}
+          </Text>
         </Text>
       </View>
     </Modal>
@@ -62,6 +68,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  recordType: {
+    textTransform: "capitalize",
   },
 });
 
