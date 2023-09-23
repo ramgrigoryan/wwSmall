@@ -47,8 +47,6 @@ const RecordCreateFormModal = ({
     setIsTagsDDOpen(false);
   };
 
-  console.log({ records });
-
   const addRecord = () => {
     records.push({
       amount: +amount,
