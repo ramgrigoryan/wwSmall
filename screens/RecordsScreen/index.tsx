@@ -1,50 +1,32 @@
-import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import RecordCard from "../../components/RecordCard";
-import { useState } from "react";
-import RecordDetailsModal from "../RecordDetailsModal";
-import { records } from "../../data/mockdata";
+import { Record, records } from "../../data/mockData";
 
 export type RecordStackParamList = {
   Records: undefined;
-  RecordDetails: { transactionId: string };
+  RecordDetails: { activeTransaction: Record };
 };
 
 type RecordsScreenProps = StackScreenProps<RecordStackParamList, "Records">;
 
 const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
-  const [recordDetailsModalVisible, setRecordDetailsModalVisible] =
-    useState(false);
-
-  const [activeTransactionId, setActiveTransactionId] = useState("");
-
-  const onActiveTransactionSelect = (transactionId: string) => {
-    setActiveTransactionId(transactionId);
-    setRecordDetailsModalVisible(true);
-  };
-
-  const onModalClose = () => {
-    setRecordDetailsModalVisible(false);
+  const onActiveTransactionSelect = (activeTransactionId: string) => {
+    navigation.navigate("RecordDetails", {
+      activeTransaction: records.find(
+        ({ transactionId }) => transactionId === activeTransactionId
+      ),
+    });
   };
 
   return (
     <View style={styles.recordView}>
-      <RecordDetailsModal
-        recordDetailsModalVisible={recordDetailsModalVisible}
-        onModalClose={onModalClose}
-        activeTransaction={
-          records.find(
-            ({ transactionId }) => transactionId === activeTransactionId
-          )!
-        }
-      />
       <FlatList
         data={records}
         keyExtractor={({ transactionId }) => transactionId}
         renderItem={({ item }) => (
           <RecordCard
             record={item}
-            navigation={navigation}
             onActiveTransactionSelect={onActiveTransactionSelect}
           />
         )}

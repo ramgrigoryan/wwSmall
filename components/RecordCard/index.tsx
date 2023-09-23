@@ -1,10 +1,8 @@
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Record, RecordStackParamList } from "../../screens/RecordsScreen";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Record } from "../../data/mockData";
 
 type RecordCardParams = {
-  navigation: StackNavigationProp<RecordStackParamList, "Records", undefined>;
   record: Record;
   onActiveTransactionSelect: (transactionId: string) => void;
 };
@@ -23,7 +21,6 @@ const AMOUNT_COLOR = {
 };
 
 const RecordCard = ({
-  navigation,
   record,
   onActiveTransactionSelect,
 }: RecordCardParams) => {
