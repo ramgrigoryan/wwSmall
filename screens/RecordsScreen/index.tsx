@@ -1,7 +1,10 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { FlatList, StyleSheet, View, Text, Pressable } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { AntDesign } from "@expo/vector-icons";
 import RecordCard from "../../components/RecordCard";
 import { Record, records } from "../../data/mockData";
+import RecordCreateFormModal from "../../components/RecordCreateForm";
 
 export type RecordStackParamList = {
   Records: undefined;
@@ -19,6 +22,13 @@ const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
     });
   };
 
+  const [isRecordCreateFormModalVisible, setIsRecordCreateFormModalVisible] =
+    useState(false);
+
+  const onRecordCreateFormClose = () => {
+    setIsRecordCreateFormModalVisible(false);
+  };
+
   return (
     <View style={styles.recordView}>
       <FlatList
@@ -31,14 +41,39 @@ const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
           />
         )}
       />
+      <View style={styles.addButton}>
+        <AntDesign
+          name="plus"
+          color="white"
+          size={30}
+          onPress={() => setIsRecordCreateFormModalVisible(true)}
+        />
+      </View>
+      <RecordCreateFormModal
+        isRecordCreateFormModalVisible={isRecordCreateFormModalVisible}
+        onRecordCreateFormClose={onRecordCreateFormClose}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   recordView: {
-    paddingVertical: 30,
+    flex: 1,
+    paddingTop: 20,
     paddingHorizontal: 5,
+  },
+  addButton: {
+    position: "absolute",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    right: 8,
+    bottom: 8,
+    backgroundColor: "rgba(68, 68, 68, 0.88)",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
 });
 
