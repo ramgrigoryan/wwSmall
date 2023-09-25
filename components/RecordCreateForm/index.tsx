@@ -68,7 +68,7 @@ const RecordCreateFormModal = ({
   }, [amount]);
 
   return (
-    <Modal visible={isRecordCreateFormModalVisible}>
+    <Modal visible={isRecordCreateFormModalVisible} animationType="slide">
       <Pressable
         onPress={resetInputs}
         style={{ flex: 1, backgroundColor: "#EEEEE5" }}
@@ -79,9 +79,15 @@ const RecordCreateFormModal = ({
           }}
         >
           <MaterialIcons
-            style={{ width: 40 }}
+            color="#FFF"
+            style={{
+              width: 50,
+              height: 50,
+              backgroundColor: "rgba(68, 68, 68,0.8)",
+              borderRadius: 25,
+            }}
             name="close"
-            size={40}
+            size={50}
             onPress={() => onRecordCreateFormClose()}
           />
           <View>
@@ -180,7 +186,6 @@ const RecordCreateFormModal = ({
                   }}
                 >
                   <TextInput
-                    inputMode="numeric"
                     value={customTag}
                     onChangeText={setCustomTag}
                     placeholder="add custom tag"
