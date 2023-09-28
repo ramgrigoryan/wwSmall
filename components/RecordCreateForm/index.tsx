@@ -10,31 +10,37 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useEffect, useState } from "react";
-import { Record, records } from "../../data/mockData";
+import { Record } from "../../data/mockData";
 
 type RecordCreateFormModalProps = {
   isRecordCreateFormModalVisible: boolean;
   onRecordCreateFormClose: () => void;
+  addNewRecord: (newRecord: Record) => void;
+  addUserTag: (newTag: string) => void;
+  wallets: string[];
+  userTags: string[];
 };
 
 const RecordCreateFormModal = ({
   isRecordCreateFormModalVisible,
   onRecordCreateFormClose,
+  addNewRecord,
+  addUserTag,
+  userTags,
+  wallets,
 }: RecordCreateFormModalProps) => {
   const [amount, setAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isTagsDDOpen, setIsTagsDDOpen] = useState(false);
   const [activeValue, setActiveValue] =
     useState<Record["recordType"]>("expense");
-  const [tags, setTags] = useState([
-    { label: "Groceries", value: "groceries" },
-    { label: "Commute", value: "commute" },
-  ]);
   const [activeTags, setActiveTags] = useState<string[]>([]);
 
   const [isCustomTagInputVisible, toggleCustomInputVisible] = useState(false);
 
   const [customTag, setCustomTag] = useState("");
+
+  const tags = userTags.map((tag) => ({ value: tag, label: tag }));
 
   const resetInputs = () => {
     setIsOpen(false);
@@ -47,14 +53,14 @@ const RecordCreateFormModal = ({
     setIsTagsDDOpen(false);
   };
 
-  const addRecord = () => {
-    records.push({
+  const onAddRecord = () => {
+    addNewRecord({
       amount: +amount,
       walletId: "1",
       tags: activeTags,
       currency: "AMD",
       recordType: activeValue,
-      transactionId: "U87wQ",
+      transactionId: Math.random().toString(),
     });
     setAmount("");
     onRecordCreateFormClose();
@@ -202,15 +208,7 @@ const RecordCreateFormModal = ({
                     title="Submit"
                     onPress={() => {
                       if (!customTag) return;
-
-                      setTags([
-                        ...tags,
-                        {
-                          label:
-                            customTag[0].toUpperCase() + customTag.substring(1),
-                          value: customTag,
-                        },
-                      ]);
+                      addUserTag(customTag);
                       toggleCustomInputVisible(!isCustomTagInputVisible);
                       setCustomTag("");
                     }}
@@ -220,7 +218,7 @@ const RecordCreateFormModal = ({
             </View>
           </View>
           <View style={{ marginTop: 20, height: 50 }}>
-            <Button title="Add Record" onPress={addRecord} />
+            <Button title="Add Record" onPress={onAddRecord} />
           </View>
         </View>
       </Pressable>

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { FlatList, StyleSheet, View, Text, Pressable } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AntDesign } from "@expo/vector-icons";
 import RecordCard from "../../components/RecordCard";
@@ -14,9 +14,25 @@ export type RecordStackParamList = {
 type RecordsScreenProps = StackScreenProps<RecordStackParamList, "Records">;
 
 const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
+  const [allRecords, setAllRecords] = useState(records);
+  const [userTags, setUserTags] = useState(
+    records.reduce((prevValue, { tags }) => {
+      return prevValue.concat(tags);
+    }, [] as string[])
+  );
+
+  useEffect(() => {
+    const uniqueTags: string[] = [];
+
+    userTags.forEach(
+      (tag) => !uniqueTags.includes(tag) && uniqueTags.push(tag)
+    );
+    setUserTags(uniqueTags);
+  }, [JSON.stringify(userTags)]);
+
   const onActiveTransactionSelect = (activeTransactionId: string) => {
     navigation.navigate("RecordDetails", {
-      activeTransaction: records.find(
+      activeTransaction: allRecords.find(
         ({ transactionId }) => transactionId === activeTransactionId
       ),
     });
@@ -25,6 +41,15 @@ const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
   const [isRecordCreateFormModalVisible, setIsRecordCreateFormModalVisible] =
     useState(false);
 
+  const addNewRecord = (newRecord: Record) => {
+    setAllRecords([...allRecords, newRecord]);
+  };
+
+  const addUserTag = (newTag: string) => {
+    if (userTags.includes(newTag)) return;
+    setUserTags([...userTags, newTag]);
+  };
+
   const onRecordCreateFormClose = () => {
     setIsRecordCreateFormModalVisible(false);
   };
@@ -32,7 +57,7 @@ const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
   return (
     <View style={styles.recordView}>
       <FlatList
-        data={records}
+        data={allRecords}
         keyExtractor={({ transactionId }) => transactionId}
         renderItem={({ item }) => (
           <RecordCard
@@ -52,6 +77,10 @@ const RecordsScreen = ({ navigation }: RecordsScreenProps) => {
       <RecordCreateFormModal
         isRecordCreateFormModalVisible={isRecordCreateFormModalVisible}
         onRecordCreateFormClose={onRecordCreateFormClose}
+        wallets={records.map(({ walletId }) => walletId)}
+        userTags={userTags}
+        addUserTag={addUserTag}
+        addNewRecord={addNewRecord}
       />
     </View>
   );
