@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import WalletSelector  from "../WalletSelector/index";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useEffect, useState } from "react";
 import { Record } from "../../data/mockData";
@@ -41,6 +42,11 @@ const RecordCreateFormModal = ({
   const [customTag, setCustomTag] = useState("");
 
   const tags = userTags.map((tag) => ({ value: tag, label: tag }));
+
+  const shouldRenderTransferControls = activeValue === "transfer";
+
+  const [sourceWallet, setSourceWallet] = useState<string>();
+  const [destinationWallet, setDestinationWallet] = useState<string>();
 
   const resetInputs = () => {
     setIsOpen(false);
@@ -112,7 +118,6 @@ const RecordCreateFormModal = ({
                 color: "#FFF",
               }}
             />
-
             <View style={{ marginTop: 10, height: 50 }}>
               <Button title="Reset" onPress={() => setAmount("")} />
             </View>
@@ -120,20 +125,17 @@ const RecordCreateFormModal = ({
               style={{
                 marginTop: 20,
                 paddingVertical: 20,
-                paddingHorizontal: 10,
               }}
             >
-              <View style={{ flexDirection: "row", gap: 15 }}>
-                <View>
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <View style={{ width: "48%" }}>
                   <DropDownPicker
                     theme="DARK"
                     style={{
-                      width: 120,
                       borderRadius: 0,
                     }}
                     dropDownDirection="TOP"
                     dropDownContainerStyle={{
-                      width: 200,
                       borderRadius: 0,
                     }}
                     value={activeValue}
@@ -151,14 +153,15 @@ const RecordCreateFormModal = ({
                     ]}
                   />
                 </View>
-                <View>
+                <View style={{ width: "48%" }}>
                   <DropDownPicker
                     multiple
                     theme="DARK"
-                    style={{ width: 120, borderRadius: 0 }}
+                    style={{ 
+                      borderRadius: 0 
+                    }}
                     dropDownDirection="TOP"
                     dropDownContainerStyle={{
-                      width: 200,
                       borderRadius: 0,
                     }}
                     multipleText={activeTags.join(", ")}
@@ -172,25 +175,13 @@ const RecordCreateFormModal = ({
                     items={tags}
                     placeholder={"Select Tag"}
                   />
-                </View>
-                <View style={{ width: 60 }}>
-                  <Button
-                    title="New tag"
-                    onPress={() =>
-                      toggleCustomInputVisible(!isCustomTagInputVisible)
-                    }
-                  />
-                </View>
-              </View>
-              {isCustomTagInputVisible && (
-                <View
-                  style={{
-                    gap: 10,
-                    marginTop: 20,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
+                  {isTagsDDOpen && (
+                   <View
+                    style={{
+                      flexDirection: "row",
+                      height: 30,
+                    }}
+                  >
                   <TextInput
                     value={customTag}
                     onChangeText={setCustomTag}
@@ -198,14 +189,14 @@ const RecordCreateFormModal = ({
                     placeholderTextColor="rgba(255,255,255, 0.8)"
                     style={{
                       flex: 1,
-                      padding: 10,
-                      backgroundColor: "rgba(14, 14, 23, 0.8)",
-                      height: 40,
-                      color: "#FFF",
+                      padding: 8,
+                      backgroundColor: "rgba(3, 4, 26, 0.7)",
+                      height: 30,
+                      color: "#FFF"     
                     }}
                   />
-                  <Button
-                    title="Submit"
+                   <Button
+                    title="ADD"
                     onPress={() => {
                       if (!customTag) return;
                       addUserTag(customTag);
@@ -214,10 +205,40 @@ const RecordCreateFormModal = ({
                     }}
                   />
                 </View>
-              )}
+                )}
+                </View>
+              </View>
             </View>
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}> 
+              <View style={{ width: "48%" }}>
+                <WalletSelector 
+                  items={[
+                    { label: 'Cash Wallet', value: 'cashWallet' },
+                    { label: 'Card Wallet', value: 'cardWallet' },
+                  ]} 
+                  placeholder={"Source"}
+                  handleChange={(value) => {
+                    setSourceWallet(value);
+                  }}    
+                />
+              </View>
+              {shouldRenderTransferControls && (
+                <View style={{ width: "48%" }}>
+                  <WalletSelector 
+                  items={[
+                    { label: 'Cash Wallet', value: 'cashWallet' },
+                    { label: 'Card Wallet', value: 'cardWallet' },
+                  ]} 
+                  placeholder={"Destination"}
+                  handleChange={(value) => {
+                    setDestinationWallet(value);
+                  }}    
+                />
+                </View>
+              )} 
+            </View> 
           </View>
-          <View style={{ marginTop: 20, height: 50 }}>
+          <View style={{ marginTop: 60, height: 50 }}>
             <Button title="Add Record" onPress={onAddRecord} />
           </View>
         </View>
