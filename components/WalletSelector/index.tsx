@@ -1,25 +1,20 @@
 import DropDownPicker from "react-native-dropdown-picker";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type WalletSelectorProps = {
     items: { label: string; value: string }[];
     placeholder: string;
-    handleChange: (selectedWallet: string) => void;
+    open: boolean;
+    setOpen: () => void;
 };
 
-const WalletSelector = ({ items, placeholder, handleChange }: WalletSelectorProps) => {
-    const [open, setOpen] = useState(false);
+const WalletSelector = ({ items, placeholder, open, setOpen }: WalletSelectorProps) => {
     const [selectedWallet, setSelectedWallet] = useState<string>();
-
-    useEffect(() => {
-        handleChange(selectedWallet);
-    }, [selectedWallet])
-    
+  
     return (
         <DropDownPicker
+            theme="DARK"
             style={{ 
-                height: 40, 
-                backgroundColor: "rgba(3, 4, 26, 0.7)",
                 borderRadius: 0,
             }}
             dropDownDirection="BOTTOM"
@@ -28,9 +23,7 @@ const WalletSelector = ({ items, placeholder, handleChange }: WalletSelectorProp
             }}
             value={selectedWallet}
             open={open}
-            setOpen={() => {
-                setOpen((prevOpen) => !prevOpen);
-            }}
+            setOpen={setOpen}
             setValue={(newValue) => setSelectedWallet(newValue)}
             placeholder={placeholder}
             items={items}

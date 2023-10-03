@@ -33,6 +33,8 @@ const RecordCreateFormModal = ({
   const [amount, setAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isTagsDDOpen, setIsTagsDDOpen] = useState(false);
+  const [isSourceOpen, setIsSourceOpen] = useState(false);
+  const [isDestinationOpen, setIsDestinationOpen] = useState(false);
   const [activeValue, setActiveValue] =
     useState<Record["recordType"]>("expense");
   const [activeTags, setActiveTags] = useState<string[]>([]);
@@ -45,12 +47,12 @@ const RecordCreateFormModal = ({
 
   const shouldRenderTransferControls = activeValue === "transfer";
 
-  const [sourceWallet, setSourceWallet] = useState<string>();
-  const [destinationWallet, setDestinationWallet] = useState<string>();
-
+ 
   const resetInputs = () => {
     setIsOpen(false);
     setIsTagsDDOpen(false);
+    setIsSourceOpen(false);
+    setIsDestinationOpen(false);
     Keyboard.dismiss();
   };
 
@@ -179,7 +181,8 @@ const RecordCreateFormModal = ({
                    <View
                     style={{
                       flexDirection: "row",
-                      height: 30,
+                      height: 50,
+                      paddingBottom: 10
                     }}
                   >
                   <TextInput
@@ -191,7 +194,7 @@ const RecordCreateFormModal = ({
                       flex: 1,
                       padding: 8,
                       backgroundColor: "rgba(3, 4, 26, 0.7)",
-                      height: 30,
+                      height: 40,
                       color: "#FFF"     
                     }}
                   />
@@ -211,28 +214,32 @@ const RecordCreateFormModal = ({
             </View>
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}> 
               <View style={{ width: "48%" }}>
-                <WalletSelector 
+                <WalletSelector
+                  open={isSourceOpen}
+                  setOpen={() => {
+                    resetInputs();
+                    setIsSourceOpen(!isSourceOpen);
+                  }}
                   items={[
                     { label: 'Cash Wallet', value: 'cashWallet' },
                     { label: 'Card Wallet', value: 'cardWallet' },
                   ]} 
-                  placeholder={"Source"}
-                  handleChange={(value) => {
-                    setSourceWallet(value);
-                  }}    
+                  placeholder={"Source"}  
                 />
               </View>
               {shouldRenderTransferControls && (
                 <View style={{ width: "48%" }}>
-                  <WalletSelector 
+                  <WalletSelector
+                  open={isDestinationOpen}
+                  setOpen={() => {
+                    resetInputs();
+                    setIsDestinationOpen(!isDestinationOpen);
+                  }}
                   items={[
                     { label: 'Cash Wallet', value: 'cashWallet' },
                     { label: 'Card Wallet', value: 'cardWallet' },
                   ]} 
-                  placeholder={"Destination"}
-                  handleChange={(value) => {
-                    setDestinationWallet(value);
-                  }}    
+                  placeholder={"Destination"}   
                 />
                 </View>
               )} 
