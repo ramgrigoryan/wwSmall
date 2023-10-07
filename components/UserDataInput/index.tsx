@@ -1,17 +1,42 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Text, KeyboardTypeOptions } from 'react-native';
 
-type UserProfileContactsProps = {
+type UserDataInputProps = {
   type: 'ssn' | 'contacts' | 'email';
   onChangeText: (text: string) => void;
   required?: boolean;
 }
 
-const UserProfileContacts = ({ 
+type InputType = {
+  type: string;
+  keyboardType: KeyboardTypeOptions;
+  placeholder: string;
+};
+
+const inputTypes: InputType[] = [
+  {
+    type: 'ssn',
+    keyboardType: 'numeric',
+    placeholder: 'SSN',
+  },
+  {
+    type: 'contacts',
+    keyboardType: 'numeric',
+    placeholder: 'Phone number',
+  },
+  {
+    type: 'email',
+    keyboardType: 'email-address',
+    placeholder: 'Email address',
+  },
+];
+
+
+const UserDataInput = ({ 
   type, 
   onChangeText,
   required = false,
-}: UserProfileContactsProps) => {
+}: UserDataInputProps) => {
   const [value, setValue] = useState('');
   const [showEmailError, setShowEmailError] = useState(false); 
 
@@ -29,7 +54,9 @@ const UserProfileContacts = ({
     }
   };
 
-  const keyboardType = type === 'ssn' || type === 'contacts' ? 'numeric' : 'default';
+  const inputType = inputTypes.find(item => item.type === type);
+  const keyboardType = inputType?.keyboardType || 'default';
+  const placeholder = inputType?.placeholder || '';
 
   const validateEmail = (email: string) => {
     return email.includes('@');
@@ -40,9 +67,9 @@ const UserProfileContacts = ({
       <TextInput
         value={value}
         onChangeText={handleTextChange}
-        placeholder={type === 'ssn' ? 'SSN' : type === 'contacts' ? 'Contacts' : 'Email adress'}
+        placeholder={placeholder}
         placeholderTextColor="black"
-          keyboardType={keyboardType}
+        keyboardType={keyboardType}
       />
        {required && !value && (
           <Text style={styles.errorText}>This field is required</Text>
@@ -70,7 +97,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserProfileContacts;
+export default UserDataInput;
 
 
 

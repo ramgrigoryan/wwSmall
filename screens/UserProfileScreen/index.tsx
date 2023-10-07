@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserProfileItem from "../../components/UserProfileItem/index";
 import UserProfileDatePicker from "../../components/UserProfileDatePicker/index";
 import UserProfileCountryGenderPicker from '../../components/UserProfileCountryGenderPicker/index';
-import UserProfileContacts from '../../components/UserProfileContacts/index';
+import UserDataInput from '../../components/UserDataInput';
 import UserProfileImageUpload from '../../components/UserProfileImageUpload/index';
 import { createStackNavigator } from '@react-navigation/stack';
 import UserProfileChangePassword from '../../components/UserProfileChangePassword/index';
@@ -97,15 +97,15 @@ const UserProfile = () => {
             ]
           }
         />
-        <UserProfileContacts 
+        <UserDataInput 
           type="ssn" 
           onChangeText={setSSN} 
         />   
-        <UserProfileContacts
+        <UserDataInput
           type="contacts" 
           onChangeText={setPhone} 
         />
-        <UserProfileContacts 
+        <UserDataInput 
           type="email" 
           onChangeText={setEmail} 
           required={true}
