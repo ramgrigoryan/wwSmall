@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 
 const ChangePasswordScreen: React.FC = () => {
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [message, setMessage] = useState<string>('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validationStatus, setValidationStatus] = useState<
+    "success" | "error" | "uninitialized"
+  >("uninitialized");
 
   const onChangePassword = () => {
     if (password === confirmPassword) {
-      setMessage('Password changed successfully');
+      setValidationStatus("success");
     } else {
-      setMessage('Passwords do not match. Please try again.');
+      setValidationStatus("error");
     }
   };
 
@@ -35,9 +37,18 @@ const ChangePasswordScreen: React.FC = () => {
       <Button
         title="Change Password"
         onPress={onChangePassword}
-        disabled={!password || password !== confirmPassword}
+        disabled={!password}
       />
-      {message !== '' && <Text style={styles.message}>{message}</Text>}
+      {validationStatus === "success" && (
+        <Text style={styles.successMessage}>
+          Password was successfully changed
+        </Text>
+      )}
+      {validationStatus === "error" && (
+        <Text style={styles.invalidMessage}>
+          Passwords do not match. Please try again.
+        </Text>
+      )}
     </View>
   );
 };
@@ -45,28 +56,26 @@ const ChangePasswordScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   input: {
-    width: '60%',
+    width: "60%",
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: "black",
     borderRadius: 8,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: "rgb(155, 199, 231)"
+    backgroundColor: "rgb(155, 199, 231)",
   },
-  message: {
-    color: 'green', 
+  successMessage: {
+    color: "green",
+    marginTop: 10,
+  },
+  invalidMessage: {
+    color: "red",
     marginTop: 10,
   },
 });
 
 export default ChangePasswordScreen;
-
-
-
-
-
-  
